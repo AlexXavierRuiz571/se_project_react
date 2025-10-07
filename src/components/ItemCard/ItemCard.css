@@ -5,6 +5,7 @@
   position: relative;
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 19px;
+  overflow: hidden;
 }
 
 .card__name {

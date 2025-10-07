@@ -1,0 +1,22 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "CabinetGrotesk", sans-serif;
+  color: #000;
+  padding: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  max-width: 1358px;
+  margin: 171px auto 24px auto;
+}
+
+.footer__text {
+  margin: 0;
+}
+
+.footer__year {
+  margin: 0;
+}
+    
