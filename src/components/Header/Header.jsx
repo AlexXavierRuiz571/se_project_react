@@ -2,7 +2,7 @@ import "./Header.css";
 import logo from "../../assets/wtwr-logo.svg";
 import avatar from "../../assets/avatar.png";
 
-function Header() {
+function Header({ addClothesButtonClick }) {
   const currentDate = new Date().toLocaleString("default", {
     month: "long",
     day: "numeric",
@@ -13,7 +13,7 @@ function Header() {
 
       <div className="header__date-location">{currentDate}, Florida</div>
 
-      <button className="header__add-clothes-button">+ Add Clothes</button>
+      <button onClick={addClothesButtonClick} type="button" className="header__add-clothes-button">+ Add Clothes</button>
 
       <div className="header__user">
         <span className="header__username">Terrence Tegegne</span>
