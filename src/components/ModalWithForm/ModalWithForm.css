@@ -131,3 +131,29 @@
   font-weight: 700;
   line-height: 20px;
 }
+
+@media screen and (max-width: 685px) {
+  .modal__container {
+    max-width: 90%;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .modal__container {
+    max-width: 95%;
+  }
+
+  .modal__title {
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  .modal__input {
+    font-size: 14px;
+  }
+
+  .modal__submit {
+    width: 100%;
+    padding: 10px 0;
+  }
+}

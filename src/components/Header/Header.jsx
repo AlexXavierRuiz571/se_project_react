@@ -1,6 +1,7 @@
 import "./Header.css";
 import logo from "../../assets/wtwr-logo.svg";
 import avatar from "../../assets/avatar.png";
+import menuIcon from "../../assets/menu-bar.png";
 
 function Header({ addClothesButtonClick, weatherData }) {
   const currentDate = new Date().toLocaleString("default", {
@@ -29,6 +30,10 @@ function Header({ addClothesButtonClick, weatherData }) {
         className="header__add-clothes-button"
       >
         + Add Clothes
+      </button>
+
+      <button className="header__menu" type="button">
+        <img src={menuIcon} alt="Menu" className="header__menu-icon" />
       </button>
 
       <div className="header__user">

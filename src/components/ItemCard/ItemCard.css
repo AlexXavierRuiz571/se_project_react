@@ -21,3 +21,16 @@
 .card__image {
   width: 100%;
 }
+
+@media screen and (max-width: 685px) {
+  .card {
+    width: 280px;
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .card {
+    width: 164px;
+    margin: 0;
+  }
+}

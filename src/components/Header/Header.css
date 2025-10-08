@@ -43,3 +43,67 @@
   font-size: 20px;
   line-height: 24px;
 }
+
+@media screen and (max-width: 685px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header__user,
+  .header__add-clothes-button {
+    display: none;
+  }
+
+  .header__menu {
+    display: block;
+  }
+}
+
+.header__date-location,
+.header__add-clothes-button,
+.header__username {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+@media screen and (max-width: 430px) {
+  .header {
+    position: relative;
+    display: block;
+    padding: 0;
+  }
+
+  .header__menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 12px;
+    background-color: #fff;
+    cursor: pointer;
+  }
+
+  .header__menu-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  .header__user,
+  .header__add-clothes-button {
+    display: none;
+  }
+ 
+  .header__date-location {
+    margin-top: 32px;
+    font-size: 16px;
+    line-height: 20px;
+  }
+}

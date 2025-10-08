@@ -42,3 +42,21 @@
   font-weight: 700;
   line-height: 24px;
 }
+
+@media screen and (max-width: 685px) {
+  .modal__container_type_image {
+    max-width: 90%;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .modal__container_type_image {
+    max-width: 95%;
+  }
+
+  .modal__caption,
+  .modal__weather-type {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}

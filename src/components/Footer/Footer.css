@@ -19,3 +19,22 @@
 .footer__year {
   margin: 0;
 }
+
+@media screen and (max-width: 685px) {
+  .footer {
+    font-size: 14px;
+    line-height: 18px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .footer {
+    flex-direction: row;
+    font-size: 12px;
+    line-height: 16px;
+    margin: 147px auto 24px auto;
+  }
+}

@@ -23,3 +23,26 @@
   object-position: right top;
   width: 100%;
 }
+
+@media screen and (max-width: 685px) {
+  .weather-card {
+    height: 72px;
+  }
+
+  .weather-card__info {
+    font-size: 28px;
+    line-height: 32px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .weather-card {
+    height: 64px;
+    margin-top: 16px;
+  }
+
+  .weather-card__info {
+    font-size: 24px;
+    line-height: 28px;
+  }
+}
