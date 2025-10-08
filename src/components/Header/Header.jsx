@@ -7,12 +7,20 @@ function Header({ addClothesButtonClick, weatherData }) {
     month: "long",
     day: "numeric",
   });
+
+  let city;
+  if (weatherData && weatherData.city && weatherData.city !== "") {
+    city = weatherData.city;
+  } else {
+    city = "loading...";
+  }
+
   return (
     <header className="header">
       <img className="header__logo" src={logo} alt="App Logo" />
 
       <div className="header__date-location">
-        {currentDate}, {weatherData.city}
+        {currentDate}, {city}
       </div>
 
       <button
