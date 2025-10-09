@@ -1,13 +1,12 @@
 import "./Main.css";
 import WeatherCard from "../WeatherCard/WeatherCard";
 import ItemCard from "../ItemCard/ItemCard";
-import { defaultClothingItems } from "../../utils/constants";
 
 function Main({ weatherData, handleCardClick }) {
   return (
     <main>
       <WeatherCard weatherData={weatherData} />
-      <section className="cards_container">
+      <section className="cards__container">
         <p className="cards__text">
           Today is {weatherData.temp.F}&deg; F / You may want to wear:
         </p>
