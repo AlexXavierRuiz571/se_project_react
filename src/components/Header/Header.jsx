@@ -2,6 +2,7 @@ import "./Header.css";
 import logo from "../../assets/wtwr-logo.svg";
 import avatar from "../../assets/avatar.png";
 import menuIcon from "../../assets/menu-bar.png";
+import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 
 function Header({ addClothesButtonClick, weatherData }) {
   const currentDate = new Date().toLocaleString("default", {
@@ -22,6 +23,10 @@ function Header({ addClothesButtonClick, weatherData }) {
 
       <div className="header__date-location">
         {currentDate}, {city}
+      </div>
+
+      <div className="header__temp-switch">
+        <ToggleSwitch />
       </div>
 
       <button

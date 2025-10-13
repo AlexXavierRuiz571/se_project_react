@@ -14,7 +14,9 @@ export const filterWeatherData = (localeData) => {
   const result = {};
 
   result.city = localeData.name;
-  result.temp = { F: localeData.main.temp };
+  result.temp = {};
+  result.temp.F = Math.round(localeData.main.temp);
+  result.temp.C = Math.round((result.temp.F - 32) * (5 / 9));
   result.type = getWeatherType(result.temp.F);
 
   let id = 800;

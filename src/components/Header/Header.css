@@ -24,7 +24,7 @@
 }
 
 .header__add-clothes-button {
-  margin: 0 20px 0 auto;
+  margin: 0 20px 0;
   font-family: "CabinetGrotesk", sans-serif;
   font-weight: 700;
   font-size: 20px;
@@ -32,6 +32,12 @@
   border: none;
   background: transparent;
   cursor: pointer;
+}
+
+.header__temp-switch {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
 }
 
 .header__user {
@@ -99,7 +105,7 @@
   .header__add-clothes-button {
     display: none;
   }
- 
+
   .header__date-location {
     margin-top: 32px;
     font-size: 16px;
