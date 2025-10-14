@@ -1,0 +1,84 @@
+/* -------- Profile Layout -------- */
+
+.profile {
+  display: flex;
+  align-items: self-start;
+  gap: 40px;
+  padding-bottom: 24px;
+}
+
+/* -------- Sidebar -------- */
+
+.profile__sidebar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.profile__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+.profile__username {
+  margin: 0;
+  font-family: "CabinetGrotesk", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+}
+
+/* -------- Clothes Section  -------- */
+
+.profile__clothes {
+  flex: 1;
+}
+.profile__title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 17px;
+  margin-bottom: 20px;
+}
+.profile__title {
+  margin: 0;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+.profile__add-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+}
+
+/* -------- Card Grid -------- */
+
+.profile__cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* -------- Media Queries -------- */
+
+@media screen and (max-width: 685px) {
+  .profile {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .profile__cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media screen and (max-width: 430px) {
+  .profile__cards {
+    grid-template-columns: 1fr;
+  }
+}

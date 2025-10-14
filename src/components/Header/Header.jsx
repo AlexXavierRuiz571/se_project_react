@@ -3,6 +3,7 @@ import logo from "../../assets/wtwr-logo.svg";
 import avatar from "../../assets/avatar.png";
 import menuIcon from "../../assets/menu-bar.png";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
+import { Link } from "react-router-dom";
 
 function Header({ addClothesButtonClick, weatherData }) {
   const currentDate = new Date().toLocaleString("default", {
@@ -19,8 +20,10 @@ function Header({ addClothesButtonClick, weatherData }) {
 
   return (
     <header className="header">
-      <img className="header__logo" src={logo} alt="App Logo" />
-
+      <Link to="/">
+        <img className="header__logo" src={logo} alt="App Logo" />
+      </Link>
+      
       <div className="header__date-location">
         {currentDate}, {city}
       </div>
@@ -41,10 +44,10 @@ function Header({ addClothesButtonClick, weatherData }) {
         <img src={menuIcon} alt="Menu" className="header__menu-icon" />
       </button>
 
-      <div className="header__user">
+      <Link to="profile" className="header__user">
         <span className="header__username">Terrence Tegegne</span>
         <img className="header__avatar" src={avatar} alt="Terrence Tegegne" />
-      </div>
+      </Link>
     </header>
   );
 }
