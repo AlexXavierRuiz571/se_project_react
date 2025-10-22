@@ -123,13 +123,24 @@
   font-size: 14px;
   border: none;
   border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: #000;
   color: #fff;
-  cursor: not-allowed;
+  cursor: pointer;
   font-family: "CabinetGrotesk-Bold", sans-serif;
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.modal__submit:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal__submit:disabled {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  cursor: not-allowed;
 }
 
 @media screen and (max-width: 685px) {

@@ -9,6 +9,7 @@ function ModalWithForm({
   activeModal,
   onClose,
   onSubmit,
+  isDisabled,
 }) {
   const isOpen = activeModal === name;
 
@@ -21,7 +22,7 @@ function ModalWithForm({
         </button>
         <form className="modal__form" name={name} onSubmit={onSubmit}>
           {children}
-          <button type="submit" className="modal__submit">
+          <button type="submit" className="modal__submit" disabled={isDisabled}>
             {buttonText}
           </button>
         </form>

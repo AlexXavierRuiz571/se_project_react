@@ -1,0 +1,86 @@
+.confirm-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirm-modal__overlay--open {
+  display: flex;
+}
+
+.confirm-modal__container {
+  width: 100%;
+  max-width: 670px;
+  border-radius: 20px;
+  background: #fff;
+  padding: 40px 32px;
+  box-sizing: border-box;
+  position: relative;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.confirm-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.confirm-modal__title {
+  margin: 20px 0 0;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  color: #000;
+}
+
+.confirm-modal__subtitle {
+  margin: 0 0 40px 0;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  color: #000;
+}
+
+.confirm-modal__delete {
+  display: inline;
+  background: none;
+  border: 0;
+  margin: 0 0 24px 0;
+  cursor: pointer;
+  color: #ff4d00;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+.confirm-modal__delete:hover {
+  color: #c70000;
+}
+
+.confirm-modal__cancel {
+  display: inline;
+  background: none;
+  border: 0;
+  margin-bottom: 20px;
+  padding: 0;
+  cursor: pointer;
+  color: #000;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+}
