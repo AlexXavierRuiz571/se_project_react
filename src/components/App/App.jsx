@@ -1,32 +1,42 @@
 import { useEffect, useState } from "react";
+import {
+  getItems,
+  addItem as apiAddItem,
+  deleteItem as apiDeleteItem,
+} from "../../utils/api";
 import "./App.css";
 
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
 import ItemModal from "../ItemModal/ItemModal";
-import AddItemModal from "../AddItemModal/AddItemModal.jsx";
-import ConfirmDeleteModal from "../DeleteConfirmationModal/ConfirmDeleteModal.jsx";
+import AddItemModal from "../AddItemModal/AddItemModal";
+import ConfirmDeleteModal from "../DeleteConfirmationModal/ConfirmDeleteModal";
+import Profile from "../Profile/Profile";
 
-import Profile from "../Profile/Profile.jsx";
 import CurrentTemperatureUnitContext from "../../contexts/CurrentTemperatureUnitContext";
-
 import { Routes, Route } from "react-router-dom";
 import { getWeather, filterWeatherData } from "../../utils/weatherApi";
 import { coordinates, APIKey } from "../../utils/constants";
-import { defaultClothingItems } from "../../utils/constants";
 
 function App() {
+
+  // ---------- Weather ----------
+
   const [weatherData, setWeatherData] = useState({
     type: "",
     temp: { F: 0, C: 0 },
     city: "",
   });
 
+  // ---------- State ----------
+
   const [activeModal, setActiveModal] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
-  const [clothingItems, setClothingItems] = useState(defaultClothingItems);
+  const [clothingItems, setClothingItems] = useState([]);
   const [currentTemperatureUnit, setCurrentTemperatureUnit] = useState("F");
+
+  // ---------- Modal Controls ----------
 
   function handleCardClick(card) {
     setSelectedCard(card);
@@ -37,43 +47,75 @@ function App() {
     setActiveModal("add-garment");
   }
 
-  function closeActiveModal() {
+  function closeModal() {
     setActiveModal("");
   }
+
+  // ---------- Add Item ----------
 
   function handleAddItem(values, handleReset) {
     const newItem = {
       name: values.name.trim(),
-      link: values.imageUrl.trim(),
+      imageUrl: values.imageUrl.trim(),
       weather: values.weather,
     };
 
-    if (!newItem.name || !newItem.link || !newItem.weather) return;
+    if (!newItem.name || !newItem.imageUrl || !newItem.weather) return;
 
-    setClothingItems((prev) => [newItem, ...prev]);
-    handleReset();
-    setActiveModal("");
+    apiAddItem(newItem)
+      .then((createdItem) => {
+        setClothingItems((prev) => [createdItem, ...prev]);
+        handleReset();
+        closeModal();
+      })
+      .catch((err) => console.error("POST /items failed:", err));
   }
 
- function openConfirmModal() {
-  setActiveModal("confirm");
-}
+  // ---------- Delete Item ----------
 
-function closeModal() {
-  setActiveModal("");
-}
+  function openConfirmModal(card) {
+    setSelectedCard(card);
+    setActiveModal("confirm");
+  }
 
-function handleDeleteItem() {
-  console.log("Item deleted");
-  closeModal();
-}
+  function handleDeleteItem() {
+    const id = selectedCard._id || selectedCard.id;
+    if (!id) return;
 
+    apiDeleteItem(id)
+      .then(() => {
+        setClothingItems((prev) =>
+          prev.filter((item) => item._id !== id && item.id !== id)
+        );
+        closeModal();
+      })
+      .catch((err) => console.error("DELETE /items failed:", err));
+  }
+
+  // ---------- Fetch Weather ----------
 
   useEffect(() => {
     getWeather(coordinates, APIKey)
       .then((localeData) => setWeatherData(filterWeatherData(localeData)))
       .catch(console.error);
   }, []);
+
+  // ---------- Fetch Items ----------
+
+  useEffect(() => {
+  getItems()
+    .then((data) => {
+      const normalizedItems = data.map((item) => ({
+        ...item,
+        link: item.imageUrl,
+      }));
+      setClothingItems(normalizedItems);
+    })
+    .catch((err) => console.error("GET /items failed:", err));
+}, []);
+
+
+  // ---------- Render ----------
 
   return (
     <CurrentTemperatureUnitContext.Provider
@@ -114,7 +156,7 @@ function handleDeleteItem() {
 
         <AddItemModal
           activeModal={activeModal}
-          onClose={closeActiveModal}
+          onClose={closeModal}
           onAddItem={handleAddItem}
         />
 
@@ -122,7 +164,7 @@ function handleDeleteItem() {
           activeModal={activeModal}
           card={selectedCard}
           onClose={closeModal}
-          onOpenConfirm={openConfirmModal}
+          onOpenConfirm={() => openConfirmModal(selectedCard)}
         />
 
         <ConfirmDeleteModal

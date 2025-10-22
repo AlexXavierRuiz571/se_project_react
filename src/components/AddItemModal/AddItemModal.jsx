@@ -26,7 +26,7 @@ function AddItemModal({ activeModal, onClose, onAddItem }) {
   return (
     <ModalWithForm
       name="add-garment"
-      titleText="New clothing"
+      titleText="New garment"
       buttonText="Add garment"
       activeModal={activeModal}
       onClose={handleClose}
