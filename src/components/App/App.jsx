@@ -11,7 +11,7 @@ import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
 import ItemModal from "../ItemModal/ItemModal";
 import AddItemModal from "../AddItemModal/AddItemModal";
-import ConfirmDeleteModal from "../DeleteConfirmationModal/ConfirmDeleteModal";
+import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
 import Profile from "../Profile/Profile";
 
 import CurrentTemperatureUnitContext from "../../contexts/CurrentTemperatureUnitContext";

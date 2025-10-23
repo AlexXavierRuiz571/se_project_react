@@ -84,3 +84,36 @@
   line-height: 24px;
   font-weight: 700;
 }
+
+@media screen and (max-width: 800px) {
+  .confirm-modal__container {
+    max-width: 90%;
+  }
+
+.confirm-modal__title,
+.confirm-modal__subtitle {
+  font-size: 20px;
+}
+
+  .confirm-modal__delete {
+    font-size: 20px;
+    line-height: 24px;
+  }
+}
+
+
+@media screen and (max-width: 430px) {
+  .confirm-modal__container {
+    max-width: 90%;
+  }
+
+.confirm-modal__title,
+.confirm-modal__subtitle {
+  font-size: 20px;
+}
+
+  .confirm-modal__delete {
+    font-size: 20px;
+    line-height: 24px;
+  }
+}

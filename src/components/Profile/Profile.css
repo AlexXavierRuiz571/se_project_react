@@ -2,7 +2,7 @@
 
 .profile {
   display: flex;
-  align-items: self-start;
+  align-items: flex-start;
   gap: 40px;
   padding-bottom: 24px;
 }
@@ -14,14 +14,32 @@
   align-items: center;
   gap: 12px;
 }
+
 .profile__avatar {
   width: 56px;
   height: 56px;
   border-radius: 50%;
 }
+
+.profile__info {
+  display: none;
+}
+
+.profile__link {
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: "CabinetGrotesk", sans-serif;
+  font-size: 20px;
+  line-height: 100%;
+  color: #00000099;
+}
+
 .profile__username {
   margin: 0;
-  font-family: "CabinetGrotesk", sans-serif;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
   font-weight: 700;
   font-size: 20px;
   line-height: 100%;
@@ -31,6 +49,7 @@
 
 .profile__clothes {
   flex: 1;
+  width: 100%;
 }
 .profile__title-row {
   display: flex;
@@ -44,6 +63,7 @@
   font-family: "CabinetGrotesk-Bold", sans-serif;
   font-weight: 700;
   font-size: 20px;
+  line-height: 100%;
 }
 .profile__add-button {
   border: none;
@@ -64,22 +84,85 @@
   margin: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 15px;
 }
 
 /* -------- Media Queries -------- */
+
+@media screen and (max-width: 1100px) {
+  .profile__cards {
+    grid-template-columns: 2fr 2fr;
+  }
+
+  .profile__title-row {
+    padding: 0;
+    justify-content: space-between;
+  }
+}
 
 @media screen and (max-width: 685px) {
   .profile {
     flex-direction: column;
     gap: 24px;
   }
+
   .profile__cards {
     grid-template-columns: 1fr 1fr;
   }
+
+  .profile__title-row {
+    padding: 0;
+    justify-content: space-between;
+  }
 }
+
 @media screen and (max-width: 430px) {
+  .profile {
+    align-items: stretch;
+  }
+
+  .profile__username {
+    margin-bottom: 4px;
+    font-family: "CabinetGrotesk-Bold", sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 100%;
+  }
+
   .profile__cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+  }
+
+  .profile__title-row {
+    padding: 0;
+    justify-content: space-between;
+  }
+
+  .profile__sidebar {
+    width: 100%;
+    padding: 20px 0;
+    gap: 20px;
+    border-top: 1px solid #0000004D;
+    border-bottom: 1px solid #0000004D;
+  }
+
+  .profile__avatar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .profile__info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .profile__link {
+    font-size: 16px;
+    line-height: 20px;
+    text-align: left;
+    padding: 0;
   }
 }

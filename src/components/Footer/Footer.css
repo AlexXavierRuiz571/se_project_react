@@ -9,7 +9,7 @@
   font-weight: 500;
   line-height: 20px;
   max-width: 1358px;
-  margin: 171px auto 24px auto;
+  margin: 171px auto 24px;
 }
 
 .footer__text {
@@ -35,6 +35,6 @@
     flex-direction: row;
     font-size: 12px;
     line-height: 16px;
-    margin: 147px auto 24px auto;
+    margin: 147px auto 24px;
   }
 }
