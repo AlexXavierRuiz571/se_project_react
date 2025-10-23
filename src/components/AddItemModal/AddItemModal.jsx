@@ -2,19 +2,18 @@ import useForm from "../../hooks/useForm.jsx";
 import ModalWithForm from "../ModalWithForm/ModalWithForm.jsx";
 
 function AddItemModal({ activeModal, onClose, onAddItem }) {
-  const { values, handleChange, handleReset } = useForm({
+  const { values, errors, isValid, handleChange, handleReset } = useForm({
     name: "",
     imageUrl: "",
     weather: "",
   });
 
-  const isFormValid =
-    values.name.trim().length > 0 &&
-    values.imageUrl.trim().length > 0 &&
-    values.weather !== "";
-
   function handleSubmit(evt) {
     evt.preventDefault();
+    if (!evt.target.checkValidity()) {
+      evt.target.reportValidity?.();
+      return;
+    }
     onAddItem(values, handleReset);
   }
 
@@ -31,7 +30,7 @@ function AddItemModal({ activeModal, onClose, onAddItem }) {
       activeModal={activeModal}
       onClose={handleClose}
       onSubmit={handleSubmit}
-      isDisabled={!isFormValid}
+      isDisabled={!isValid}
     >
       <label className="modal__label">
         Name
@@ -42,14 +41,15 @@ function AddItemModal({ activeModal, onClose, onAddItem }) {
           value={values.name}
           onChange={handleChange}
           placeholder="Name"
-          minLength="1"
+          minLength="2"
           maxLength="30"
           required
         />
+        {errors.name && <span className="modal__error">{errors.name}</span>}
       </label>
 
       <label className="modal__label">
-        Image URL
+        Image
         <input
           className="modal__input"
           type="url"
@@ -59,6 +59,9 @@ function AddItemModal({ activeModal, onClose, onAddItem }) {
           placeholder="Image URL"
           required
         />
+        {errors.imageUrl && (
+          <span className="modal__error">{errors.imageUrl}</span>
+        )}
       </label>
 
       <fieldset className="modal__weather-buttons">
@@ -105,6 +108,9 @@ function AddItemModal({ activeModal, onClose, onAddItem }) {
           />
           <span>Cold</span>
         </label>
+        {errors.weather && (
+          <span className="modal__error">{errors.weather}</span>
+        )}
       </fieldset>
     </ModalWithForm>
   );
