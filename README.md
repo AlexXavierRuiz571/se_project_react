@@ -22,7 +22,7 @@ This project is part of the TripleTen Software Engineering Program and demonstra
 
 ## Project Pitch Video
 
-Check out [this video](ADD_LINK_HERE), where I describe my
+Check out [this video](https://drive.google.com/file/d/1N8HKT-mGvB2vnwwhlvfQeDZqSe9rd9Lp/view?usp=sharing), where I describe my
 project and some challenges I faced while building it.
 
 ---
