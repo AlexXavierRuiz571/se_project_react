@@ -5,7 +5,6 @@ import {
   deleteItem as apiDeleteItem,
 } from "../../utils/api";
 import "./App.css";
-
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
@@ -13,14 +12,12 @@ import ItemModal from "../ItemModal/ItemModal";
 import AddItemModal from "../AddItemModal/AddItemModal";
 import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
 import Profile from "../Profile/Profile";
-
 import CurrentTemperatureUnitContext from "../../contexts/CurrentTemperatureUnitContext";
 import { Routes, Route } from "react-router-dom";
 import { getWeather, filterWeatherData } from "../../utils/weatherApi";
 import { coordinates, APIKey } from "../../utils/constants";
 
 function App() {
-
   // ---------- Weather ----------
 
   const [weatherData, setWeatherData] = useState({
@@ -103,17 +100,16 @@ function App() {
   // ---------- Fetch Items ----------
 
   useEffect(() => {
-  getItems()
-    .then((data) => {
-      const normalizedItems = data.map((item) => ({
-        ...item,
-        link: item.imageUrl,
-      }));
-      setClothingItems(normalizedItems);
-    })
-    .catch((err) => console.error("GET /items failed:", err));
-}, []);
-
+    getItems()
+      .then((data) => {
+        const normalizedItems = data.map((item) => ({
+          ...item,
+          link: item.imageUrl,
+        }));
+        setClothingItems(normalizedItems);
+      })
+      .catch((err) => console.error("GET /items failed:", err));
+  }, []);
 
   // ---------- Render ----------
 
