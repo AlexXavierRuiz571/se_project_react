@@ -42,13 +42,13 @@ function Header({ addClothesButtonClick, weatherData }) {
         + Add Clothes
       </button>
 
-      <Link to="profile" className="navigation_menu">
+      <Link to="/profile" className="navigation_menu">
         <button className="navigation__menu" type="button">
           <img src={menuIcon} alt="Menu" className="navigation__menu-icon" />
         </button>
       </Link>
 
-      <Link to="profile" className="header__user">
+      <Link to="/profile" className="header__user">
         <span className="header__username">Terrence Tegegne</span>
         <img className="header__avatar" src={avatar} alt="Terrence Tegegne" />
       </Link>
