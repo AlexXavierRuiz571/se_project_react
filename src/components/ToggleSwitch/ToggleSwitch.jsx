@@ -3,17 +3,11 @@ import CurrentTemperatureUnitContext from "../../contexts/CurrentTemperatureUnit
 import "./ToggleSwitch.css";
 
 function ToggleSwitch() {
-  const { currentTemperatureUnit, setCurrentTemperatureUnit } = useContext(
+  const { currentTemperatureUnit, handleToggleSwitchChange } = useContext(
     CurrentTemperatureUnitContext
   );
 
   const checked = currentTemperatureUnit === "C";
-
-  const handleToggleSwitchChange = () => {
-    currentTemperatureUnit === "F"
-      ? setCurrentTemperatureUnit("C")
-      : setCurrentTemperatureUnit("F");
-  };
 
   return (
     <label className="temp-toggle">

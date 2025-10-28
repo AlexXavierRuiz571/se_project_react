@@ -20,34 +20,23 @@ const backgrounds = {
   "sunny-night": sunnyNight,
   "cloudy-day": cloudyDay,
   "cloudy-night": cloudyNight,
-  "rain-day": rainyDay,
-  "rain-night": rainyNight,
-  "storm-day": stormyDay,
-  "storm-night": stormyNight,
-  "snow-day": snowyDay,
-  "snow-night": snowyNight,
-  "fog-day": foggyDay,
-  "fog-night": foggyNight,
+  "rainy-day": rainyDay,
+  "rainy-night": rainyNight,
+  "stormy-day": stormyDay,
+  "stormy-night": stormyNight,
+  "snowy-day": snowyDay,
+  "snowy-night": snowyNight,
+  "foggy-day": foggyDay,
+  "foggy-night": foggyNight,
 };
 
 function WeatherCard({ weatherData }) {
   const { currentTemperatureUnit } = useContext(CurrentTemperatureUnitContext);
 
-  let key;
-  if (weatherData && weatherData.condition) {
-    key = weatherData.condition;
-  } else {
-    key = "sunny-day";
-  }
+  const conditionKey =
+    weatherData && weatherData.condition ? weatherData.condition : "sunny-day";
 
-  let src;
-  if (backgrounds[key]) {
-    src = backgrounds[key];
-  } else {
-    src = sunnyDay;
-  }
-
-  const value = weatherData?.temp?.[currentTemperatureUnit] ?? 0;
+  const src = backgrounds[conditionKey] ?? sunnyDay;
 
   return (
     <section className="weather-card">
@@ -55,7 +44,7 @@ function WeatherCard({ weatherData }) {
         {Math.round(weatherData?.temp?.[currentTemperatureUnit] ?? 0)}&deg;{" "}
         {currentTemperatureUnit}
       </p>
-      <img src={src} alt={key} className="weather-card__image" />
+      <img src={src} alt={conditionKey} className="weather-card__image" />
     </section>
   );
 }

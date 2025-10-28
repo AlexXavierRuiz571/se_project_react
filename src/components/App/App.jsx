@@ -33,6 +33,16 @@ function App() {
   const [clothingItems, setClothingItems] = useState([]);
   const [currentTemperatureUnit, setCurrentTemperatureUnit] = useState("F");
 
+  // ---------- Helpers ----------
+
+  const normalizeItem = (item) => ({
+    ...item,
+    link: item.link ?? item.imageUrl ?? "",
+  });
+
+  const handleToggleSwitchChange = () =>
+    setCurrentTemperatureUnit((prev) => (prev === "F" ? "C" : "F"));
+
   // ---------- Modal Controls ----------
 
   function handleCardClick(card) {
@@ -61,7 +71,8 @@ function App() {
 
     apiAddItem(newItem)
       .then((createdItem) => {
-        setClothingItems((prev) => [createdItem, ...prev]);
+        const normalized = normalizeItem(createdItem);
+        setClothingItems((prev) => [normalized, ...prev]);
         handleReset();
         closeModal();
       })
@@ -102,11 +113,7 @@ function App() {
   useEffect(() => {
     getItems()
       .then((data) => {
-        const normalizedItems = data.map((item) => ({
-          ...item,
-          link: item.imageUrl,
-        }));
-        setClothingItems(normalizedItems);
+        setClothingItems(data.map(normalizeItem));
       })
       .catch((err) => console.error("GET /items failed:", err));
   }, []);
@@ -115,7 +122,7 @@ function App() {
 
   return (
     <CurrentTemperatureUnitContext.Provider
-      value={{ currentTemperatureUnit, setCurrentTemperatureUnit }}
+      value={{ currentTemperatureUnit, handleToggleSwitchChange }}
     >
       <div className="page">
         <div className="page__wrapper">

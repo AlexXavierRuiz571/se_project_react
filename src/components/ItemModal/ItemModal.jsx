@@ -5,13 +5,16 @@ function ItemModal({ activeModal, card, onClose, onOpenConfirm }) {
   const isOpen = activeModal === "preview";
   if (!isOpen || !card || !card.name) return null;
 
+  const imageSrc = card.link ?? card.imageUrl ?? "";
+
   return (
     <div className={`modal ${isOpen ? "modal__opened" : ""}`}>
       <div className="modal__container_type_image">
         <button onClick={onClose} type="button" className="modal__close">
           <img src={closeIcon} alt="Close Icon" />
         </button>
-        <img src={card.link} alt={card.name} className="modal__image" />
+       
+        <img src={imageSrc} alt={card.name} className="modal__image" />
 
         <div className="modal__footer">
           <div className="modal__info">

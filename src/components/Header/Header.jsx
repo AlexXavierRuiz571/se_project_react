@@ -3,11 +3,9 @@ import logo from "../../assets/wtwr-logo.svg";
 import avatar from "../../assets/avatar.png";
 import menuIcon from "../../assets/menu-bar.png";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Header({ addClothesButtonClick, weatherData }) {
-  const navigate = useNavigate();
-
   const currentDate = new Date().toLocaleString("default", {
     month: "long",
     day: "numeric",
