@@ -1,8 +1,10 @@
 const BASE_URL = "http://localhost:3001";
 
-const check = (res) => (res.ok ? res.json() : Promise.reject(res));
+export const checkResponse = (res) => {
+  return res.ok ? res.json() : Promise.reject(res);
+};
 
-export const getItems = () => fetch(`${BASE_URL}/items`).then(check);
+export const getItems = () => fetch(`${BASE_URL}/items`).then(checkResponse);
 
 export const addItem = ({ name, imageUrl, weather }) =>
   fetch(`${BASE_URL}/items`, {
