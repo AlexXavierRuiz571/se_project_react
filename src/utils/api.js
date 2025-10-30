@@ -11,7 +11,7 @@ export const addItem = ({ name, imageUrl, weather }) =>
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, imageUrl, weather }),
-  }).then(check);
+  }).then(checkResponse);
 
 export const deleteItem = (_id) =>
   fetch(`${BASE_URL}/items/${_id}`, { method: "DELETE" }).then((res) => {

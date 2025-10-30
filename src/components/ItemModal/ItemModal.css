@@ -27,6 +27,10 @@
 
 .modal__image {
   width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 20px;
 }
 
 .modal__caption {
