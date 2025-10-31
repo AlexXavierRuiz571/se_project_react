@@ -10,12 +10,15 @@ function ToggleSwitch() {
   const checked = currentTemperatureUnit === "C";
 
   return (
-    <label className="temp-toggle">
+    <label className="temp-toggle" htmlFor="temp-toggle-input">
       <input
+        id="temp-toggle-input"
+        name="temperatureUnit"
         type="checkbox"
         className="temp-toggle__checkbox"
         checked={checked}
         onChange={handleToggleSwitchChange}
+        aria-label="Toggle temperature unit between Fahrenheit and Celsius"
       />
 
       <span className="temp-toggle__track">

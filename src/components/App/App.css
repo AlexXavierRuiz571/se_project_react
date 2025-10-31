@@ -8,6 +8,34 @@
   padding: 0;
 }
 
+.location-warning {
+  background: #fff3f0;
+  border: 1px solid #ffb59a;
+  color: #66331a;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.location-warning__retry {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid #66331a;
+  color: #66331a;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.location-warning__retry:hover {
+  background: rgba(102, 51, 26, 0.06);
+}
+
 @media screen and (max-width: 685px) {
   .page__wrapper {
     max-width: 90%;

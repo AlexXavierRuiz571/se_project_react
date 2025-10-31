@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   getItems,
   addItem as apiAddItem,
@@ -15,26 +15,31 @@ import Profile from "../Profile/Profile";
 import CurrentTemperatureUnitContext from "../../contexts/CurrentTemperatureUnitContext";
 import { Routes, Route } from "react-router-dom";
 import { getWeather, filterWeatherData } from "../../utils/weatherApi";
-import { coordinates, APIKey } from "../../utils/constants";
+import { coordinates, APIKey, getBestCoordinates } from "../../utils/constants";
 
 function App() {
   // ---------- Weather ----------
-
   const [weatherData, setWeatherData] = useState({
     type: "",
     temp: { F: 0, C: 0 },
     city: "",
   });
 
-  // ---------- State ----------
+  // track coords and permission state
+  const [coords, setCoords] = useState(null);
+  const [coordsSource, setCoordsSource] = useState(null);
+  const [locationPermissionDenied, setLocationPermissionDenied] =
+    useState(false);
+  const [coordsFetchError, setCoordsFetchError] = useState(null);
+  const [coordsRetryCount, setCoordsRetryCount] = useState(0);
 
+  // ---------- State ----------
   const [activeModal, setActiveModal] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
   const [clothingItems, setClothingItems] = useState([]);
   const [currentTemperatureUnit, setCurrentTemperatureUnit] = useState("F");
 
   // ---------- Helpers ----------
-
   const normalizeItem = (item) => ({
     ...item,
     link: item.link ?? item.imageUrl ?? "",
@@ -44,7 +49,6 @@ function App() {
     setCurrentTemperatureUnit((prev) => (prev === "F" ? "C" : "F"));
 
   // ---------- Modal Controls ----------
-
   function handleCardClick(card) {
     setSelectedCard(card);
     setActiveModal("preview");
@@ -59,7 +63,6 @@ function App() {
   }
 
   // ---------- Add Item ----------
-
   function handleAddItem(values, handleReset) {
     const newItem = {
       name: values.name.trim(),
@@ -80,7 +83,6 @@ function App() {
   }
 
   // ---------- Delete Item ----------
-
   function openConfirmModal(card) {
     setSelectedCard(card);
     setActiveModal("confirm");
@@ -100,16 +102,63 @@ function App() {
       .catch((err) => console.error("DELETE /items failed:", err));
   }
 
-  // ---------- Fetch Weather ----------
-
+  // ---------- Acquire Coordinates (cache -> geolocation -> IP -> default) ----------
   useEffect(() => {
-    getWeather(coordinates, APIKey)
-      .then((localeData) => setWeatherData(filterWeatherData(localeData)))
-      .catch(console.error);
+    let mounted = true;
+    setCoordsFetchError(null);
+
+    (async () => {
+      try {
+        const result = await getBestCoordinates({
+          // ttl and timeout can be adjusted
+          ttl: 10 * 60 * 1000,
+          timeout: 10000,
+          defaultCoords: {
+            lat: coordinates.latitude,
+            lon: coordinates.longitude,
+          },
+        });
+        if (!mounted) return;
+        setCoords({ latitude: result.lat, longitude: result.lon });
+        setCoordsSource(result.source);
+        setLocationPermissionDenied(!!result.permissionDenied);
+      } catch (err) {
+        console.error("Failed to obtain coordinates:", err);
+        if (!mounted) return;
+        // fallback to default constant coords if anything unexpected
+        setCoords({
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude,
+        });
+        setCoordsSource("default");
+        setCoordsFetchError(err?.message ?? String(err));
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+    // rerun if user clicks Retry (coordsRetryCount)
+  }, [coordsRetryCount]);
+
+  // temporary: use default coords to verify app loads
+  useEffect(() => {
+    setCoords({
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+    });
+    setCoordsSource("default");
   }, []);
 
-  // ---------- Fetch Items ----------
+  // ---------- Fetch Weather when coords available ----------
+  useEffect(() => {
+    if (!coords) return;
+    getWeather(coords, APIKey)
+      .then((localeData) => setWeatherData(filterWeatherData(localeData)))
+      .catch(console.error);
+  }, [coords]);
 
+  // ---------- Fetch Items ----------
   useEffect(() => {
     getItems()
       .then((data) => {
@@ -118,14 +167,34 @@ function App() {
       .catch((err) => console.error("GET /items failed:", err));
   }, []);
 
-  // ---------- Render ----------
+  // Retry handler to re-request geolocation
+  const handleRetryLocation = useCallback(() => {
+    // clear any previous permission flag and bump counter to re-run effect
+    setLocationPermissionDenied(false);
+    setCoordsRetryCount((c) => c + 1);
+  }, []);
 
+  // ---------- Render ----------
   return (
     <CurrentTemperatureUnitContext.Provider
       value={{ currentTemperatureUnit, handleToggleSwitchChange }}
     >
       <div className="page">
         <div className="page__wrapper">
+          {/* Tiny banner when permission was denied */}
+          {locationPermissionDenied && (
+            <div className="location-warning" role="status" aria-live="polite">
+              We couldn't access your precise location (permission denied).
+              Using an approximate location for weather.
+              <button
+                className="location-warning__retry"
+                onClick={handleRetryLocation}
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
           <Header
             addClothesButtonClick={addClothesButtonClick}
             weatherData={weatherData}

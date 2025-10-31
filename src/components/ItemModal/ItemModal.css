@@ -23,6 +23,7 @@
   box-sizing: border-box;
   width: 100%;
   border-radius: 20px;
+  z-index: 1; /* ensure container sits below the close button */
 }
 
 .modal__image {
@@ -31,6 +32,8 @@
   max-height: 80vh;
   object-fit: contain;
   border-radius: 20px;
+  position: relative; /* enable z-index */
+  z-index: 0; /* keep image behind the close button */
 }
 
 .modal__caption {
@@ -77,6 +80,16 @@
 
 .item-modal__delete:hover {
   color: #c70000;
+}
+
+.modal__close {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+  z-index: 10; /* keep close button in front of image/content */
 }
 
 @media screen and (max-width: 685px) {

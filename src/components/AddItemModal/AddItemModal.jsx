@@ -1,12 +1,26 @@
-import useForm from "../../hooks/useForm.jsx";
+import { useEffect, useMemo } from "react";
+import useFormWithValidation from "../../hooks/useFormWithValidation.jsx";
 import ModalWithForm from "../ModalWithForm/ModalWithForm.jsx";
 
 function AddItemModal({ activeModal, onClose, onAddItem }) {
-  const { values, errors, isValid, handleChange, handleReset } = useForm({
-    name: "",
-    imageUrl: "",
-    weather: "",
-  });
+  const initialForm = useMemo(
+    () => ({
+      name: "",
+      imageUrl: "",
+      weather: "",
+    }),
+    []
+  );
+
+  const { values, errors, isValid, handleChange, handleReset } =
+    useFormWithValidation(initialForm);
+
+  // Reset the form each time the add-garment modal is opened
+  useEffect(() => {
+    if (activeModal === "add-garment") {
+      handleReset();
+    }
+  }, [activeModal, handleReset]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -44,6 +58,7 @@ function AddItemModal({ activeModal, onClose, onAddItem }) {
           minLength="2"
           maxLength="30"
           required
+          autoComplete="off"
         />
         {errors.name && <span className="modal__error">{errors.name}</span>}
       </label>
@@ -58,6 +73,7 @@ function AddItemModal({ activeModal, onClose, onAddItem }) {
           onChange={handleChange}
           placeholder="Image URL"
           required
+          autoComplete="url"
         />
         {errors.imageUrl && (
           <span className="modal__error">{errors.imageUrl}</span>
