@@ -6,14 +6,16 @@ export const checkResponse = (res) => {
 
 export const getItems = () => fetch(`${BASE_URL}/items`).then(checkResponse);
 
-export const addItem = ({ name, imageUrl, weather }) =>
-  fetch(`${BASE_URL}/items`, {
+export const addItem = ({ name, imageUrl, weather }) => {
+  return fetch(`${BASE_URL}/items`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, imageUrl, weather }),
   }).then(checkResponse);
+};
 
-export const deleteItem = (_id) =>
-  fetch(`${BASE_URL}/items/${_id}`, { method: "DELETE" }).then((res) => {
-    if (!res.ok) return Promise.reject(res);
-  });
+export const deleteItem = (id) => {
+  return fetch(`${BASE_URL}/items/${id}`, {
+    method: "DELETE",
+  }).then(checkResponse);
+};

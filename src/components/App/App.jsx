@@ -4,6 +4,9 @@ import {
   addItem as apiAddItem,
   deleteItem as apiDeleteItem,
 } from "../../utils/api";
+import RegisterModal from "../RegisterModal/RegisterModal";
+import { signup, signin, checkToken } from "../../utils/auth";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import "./App.css";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
@@ -38,6 +41,8 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [clothingItems, setClothingItems] = useState([]);
   const [currentTemperatureUnit, setCurrentTemperatureUnit] = useState("F");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   // ---------- Helpers ----------
   const normalizeItem = (item) => ({
@@ -141,15 +146,6 @@ function App() {
     // rerun if user clicks Retry (coordsRetryCount)
   }, [coordsRetryCount]);
 
-  // temporary: use default coords to verify app loads
-  useEffect(() => {
-    setCoords({
-      latitude: coordinates.latitude,
-      longitude: coordinates.longitude,
-    });
-    setCoordsSource("default");
-  }, []);
-
   // ---------- Fetch Weather when coords available ----------
   useEffect(() => {
     if (!coords) return;
@@ -167,12 +163,52 @@ function App() {
       .catch((err) => console.error("GET /items failed:", err));
   }, []);
 
+  // ---------- Check token on app load ----------
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (!token) return;
+
+    checkToken(token)
+      .then((user) => {
+        setCurrentUser(user);
+        setIsLoggedIn(true);
+      })
+      .catch(() => {
+        localStorage.removeItem("jwt");
+      });
+  }, []);
+
   // Retry handler to re-request geolocation
   const handleRetryLocation = useCallback(() => {
     // clear any previous permission flag and bump counter to re-run effect
     setLocationPermissionDenied(false);
     setCoordsRetryCount((c) => c + 1);
   }, []);
+
+  // ---------- Register Modal ----------
+  function handleRegister({ name, avatar, email, password }, handleReset) {
+    signup({ name, avatar, email, password })
+      .then(() => signin({ email, password }))
+      .then((res) => {
+        localStorage.setItem("jwt", res.token);
+        setIsLoggedIn(true);
+        handleReset?.();
+        closeModal();
+      })
+      .catch((err) => console.error("Registration failed:", err));
+  }
+
+  // ---------- Login Modal ----------
+  function handleLogin({ email, password }, handleReset) {
+    signin({ email, password })
+      .then((res) => {
+        localStorage.setItem("jwt", res.token);
+        setIsLoggedIn(true);
+        handleReset?.();
+        closeModal();
+      })
+      .catch((err) => console.error("Login failed:", err));
+  }
 
   // ---------- Render ----------
   return (
@@ -211,14 +247,17 @@ function App() {
                 />
               }
             />
+
             <Route
               path="/profile"
               element={
-                <Profile
-                  clothingItems={clothingItems}
-                  addClothesButtonClick={addClothesButtonClick}
-                  handleCardClick={handleCardClick}
-                />
+                <ProtectedRoute isLoggedIn={isLoggedIn}>
+                  <Profile
+                    clothingItems={clothingItems}
+                    addClothesButtonClick={addClothesButtonClick}
+                    handleCardClick={handleCardClick}
+                  />
+                </ProtectedRoute>
               }
             />
           </Routes>
@@ -243,6 +282,12 @@ function App() {
           activeModal={activeModal}
           onClose={closeModal}
           onConfirm={handleDeleteItem}
+        />
+
+        <RegisterModal
+          activeModal={activeModal}
+          onClose={closeModal}
+          onRegister={handleRegister}
         />
       </div>
     </CurrentTemperatureUnitContext.Provider>
