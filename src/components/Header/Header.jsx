@@ -1,22 +1,23 @@
 import "./Header.css";
 import logo from "../../assets/wtwr-logo.svg";
-import avatar from "../../assets/avatar.png";
-import menuIcon from "../../assets/menu-bar.png";
+import avatarFallback from "../../assets/avatar.png";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import { Link } from "react-router-dom";
 
-function Header({ addClothesButtonClick, weatherData }) {
+function Header({
+  addClothesButtonClick,
+  weatherData,
+  isLoggedIn,
+  currentUser,
+  onSignUp,
+  onLogIn,
+}) {
   const currentDate = new Date().toLocaleString("default", {
     month: "long",
     day: "numeric",
   });
 
-  let city;
-  if (weatherData && weatherData.city && weatherData.city !== "") {
-    city = weatherData.city;
-  } else {
-    city = "loading...";
-  }
+  const city = weatherData?.city || "loading...";
 
   return (
     <header className="header">
@@ -28,28 +29,39 @@ function Header({ addClothesButtonClick, weatherData }) {
         {currentDate}, {city}
       </div>
 
-      <div className="header__temp-switch">
-        <ToggleSwitch />
-      </div>
+      <ToggleSwitch />
 
-      <button
-        onClick={addClothesButtonClick}
-        type="button"
-        className="header__add-clothes-button"
-      >
-        + Add Clothes
-      </button>
+      {isLoggedIn ? (
+        <>
+          <button
+            onClick={addClothesButtonClick}
+            type="button"
+            className="header__add-clothes-button"
+          >
+            + Add Clothes
+          </button>
 
-      <Link to="/profile" className="navigation_menu">
-        <button className="navigation__menu" type="button">
-          <img src={menuIcon} alt="Menu" className="navigation__menu-icon" />
-        </button>
-      </Link>
-
-      <Link to="/profile" className="header__user">
-        <span className="header__username">Terrence Tegegne</span>
-        <img className="header__avatar" src={avatar} alt="Terrence Tegegne" />
-      </Link>
+          <Link to="/profile" className="header__user">
+            <span className="header__username">
+              {currentUser?.name || "User"}
+            </span>
+            <img
+              className="header__avatar"
+              src={currentUser?.avatar || avatarFallback}
+              alt="User avatar"
+            />
+          </Link>
+        </>
+      ) : (
+        <div className="header__auth">
+          <button className="header__auth-btn" onClick={onSignUp}>
+            Sign Up
+          </button>
+          <button className="header__auth-btn" onClick={onLogIn}>
+            Log In
+          </button>
+        </div>
+      )}
     </header>
   );
 }

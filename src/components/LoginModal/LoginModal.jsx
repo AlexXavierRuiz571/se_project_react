@@ -2,11 +2,9 @@ import { useEffect, useMemo } from "react";
 import useFormWithValidation from "../../hooks/useFormWithValidation.jsx";
 import ModalWithForm from "../ModalWithForm/ModalWithForm.jsx";
 
-function RegisterModal({ activeModal, onClose, onRegister, onSwitchToLogin }) {
+function LoginModal({ activeModal, onClose, onLogin, onSwitchToRegister }) {
   const initialForm = useMemo(
     () => ({
-      name: "",
-      avatar: "",
       email: "",
       password: "",
     }),
@@ -16,21 +14,15 @@ function RegisterModal({ activeModal, onClose, onRegister, onSwitchToLogin }) {
   const { values, errors, isValid, handleChange, handleReset } =
     useFormWithValidation(initialForm);
 
-  // Reset the form each time the register modal is opened
   useEffect(() => {
-    if (activeModal === "register") {
+    if (activeModal === "login") {
       handleReset();
     }
   }, [activeModal, handleReset]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    if (!evt.target.checkValidity()) {
-      evt.target.reportValidity?.();
-      return;
-    }
-
-    onRegister(values, handleReset);
+    onLogin(values, handleReset);
   }
 
   function handleClose() {
@@ -40,16 +32,16 @@ function RegisterModal({ activeModal, onClose, onRegister, onSwitchToLogin }) {
 
   return (
     <ModalWithForm
-      name="register"
-      titleText="Sign Up"
-      buttonText="Sign Up"
+      name="login"
+      titleText="Log In"
+      buttonText="Log In"
       activeModal={activeModal}
       onClose={handleClose}
       onSubmit={handleSubmit}
       isDisabled={!isValid}
     >
       <label className="modal__label">
-        Email*
+        Email
         <input
           className="modal__input"
           type="email"
@@ -58,13 +50,12 @@ function RegisterModal({ activeModal, onClose, onRegister, onSwitchToLogin }) {
           onChange={handleChange}
           placeholder="Email"
           required
-          autoComplete="email"
         />
         {errors.email && <span className="modal__error">{errors.email}</span>}
       </label>
 
       <label className="modal__label">
-        Password*
+        Password
         <input
           className="modal__input"
           type="password"
@@ -74,43 +65,10 @@ function RegisterModal({ activeModal, onClose, onRegister, onSwitchToLogin }) {
           placeholder="Password"
           minLength="8"
           required
-          autoComplete="new-password"
         />
         {errors.password && (
           <span className="modal__error">{errors.password}</span>
         )}
-      </label>
-
-      <label className="modal__label">
-        Name*
-        <input
-          className="modal__input"
-          type="text"
-          name="name"
-          value={values.name}
-          onChange={handleChange}
-          placeholder="Name"
-          minLength="2"
-          maxLength="30"
-          required
-          autoComplete="name"
-        />
-        {errors.name && <span className="modal__error">{errors.name}</span>}
-      </label>
-
-      <label className="modal__label">
-        Avatar URL*
-        <input
-          className="modal__input"
-          type="url"
-          name="avatar"
-          value={values.avatar}
-          onChange={handleChange}
-          placeholder="Avatar URL"
-          required
-          autoComplete="url"
-        />
-        {errors.avatar && <span className="modal__error">{errors.avatar}</span>}
       </label>
 
       <div className="modal__alt-actions">
@@ -120,14 +78,14 @@ function RegisterModal({ activeModal, onClose, onRegister, onSwitchToLogin }) {
           className="modal__alt-link"
           onClick={() => {
             onClose();
-            onSwitchToLogin();
+            onSwitchToRegister();
           }}
         >
-          Log in
+          Sign Up
         </button>
       </div>
     </ModalWithForm>
   );
 }
 
-export default RegisterModal;
+export default LoginModal;

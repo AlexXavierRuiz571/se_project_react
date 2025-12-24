@@ -6,6 +6,7 @@ export default function Profile({
   clothingItems,
   addClothesButtonClick,
   handleCardClick,
+  onEditProfile,
 }) {
   return (
     <main className="profile">

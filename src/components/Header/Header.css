@@ -8,6 +8,12 @@
   width: 100%;
 }
 
+.header__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+
 .navigation__menu {
   display: none;
   border: none;

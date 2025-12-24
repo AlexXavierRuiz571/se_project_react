@@ -32,8 +32,8 @@
   max-height: 80vh;
   object-fit: contain;
   border-radius: 20px;
-  position: relative; /* enable z-index */
-  z-index: 0; /* keep image behind the close button */
+  position: relative;
+  z-index: 0;
 }
 
 .modal__caption {

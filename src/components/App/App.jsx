@@ -3,8 +3,8 @@ import {
   getItems,
   addItem as apiAddItem,
   deleteItem as apiDeleteItem,
+  updateUser,
 } from "../../utils/api";
-import RegisterModal from "../RegisterModal/RegisterModal";
 import { signup, signin, checkToken } from "../../utils/auth";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import "./App.css";
@@ -12,10 +12,14 @@ import Header from "../Header/Header";
 import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
 import ItemModal from "../ItemModal/ItemModal";
+import RegisterModal from "../RegisterModal/RegisterModal";
+import LoginModal from "../LoginModal/LoginModal";
+import EditProfileModal from "../EditProfileModal/EditProfileModal";
 import AddItemModal from "../AddItemModal/AddItemModal";
 import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
 import Profile from "../Profile/Profile";
 import CurrentTemperatureUnitContext from "../../contexts/CurrentTemperatureUnitContext";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 import { Routes, Route } from "react-router-dom";
 import { getWeather, filterWeatherData } from "../../utils/weatherApi";
 import { coordinates, APIKey, getBestCoordinates } from "../../utils/constants";
@@ -41,6 +45,8 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [clothingItems, setClothingItems] = useState([]);
   const [currentTemperatureUnit, setCurrentTemperatureUnit] = useState("F");
+
+  // auth / user
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -61,6 +67,10 @@ function App() {
 
   function addClothesButtonClick() {
     setActiveModal("add-garment");
+  }
+
+  function handleEditProfileClick() {
+    setActiveModal("edit-profile");
   }
 
   function closeModal() {
@@ -115,7 +125,6 @@ function App() {
     (async () => {
       try {
         const result = await getBestCoordinates({
-          // ttl and timeout can be adjusted
           ttl: 10 * 60 * 1000,
           timeout: 10000,
           defaultCoords: {
@@ -130,7 +139,6 @@ function App() {
       } catch (err) {
         console.error("Failed to obtain coordinates:", err);
         if (!mounted) return;
-        // fallback to default constant coords if anything unexpected
         setCoords({
           latitude: coordinates.latitude,
           longitude: coordinates.longitude,
@@ -143,7 +151,6 @@ function App() {
     return () => {
       mounted = false;
     };
-    // rerun if user clicks Retry (coordsRetryCount)
   }, [coordsRetryCount]);
 
   // ---------- Fetch Weather when coords available ----------
@@ -154,7 +161,7 @@ function App() {
       .catch(console.error);
   }, [coords]);
 
-  // ---------- Fetch Items ----------
+  // ---------- Fetch Items (allowed for everyone) ----------
   useEffect(() => {
     getItems()
       .then((data) => {
@@ -175,22 +182,27 @@ function App() {
       })
       .catch(() => {
         localStorage.removeItem("jwt");
+        setCurrentUser(null);
+        setIsLoggedIn(false);
       });
   }, []);
 
   // Retry handler to re-request geolocation
   const handleRetryLocation = useCallback(() => {
-    // clear any previous permission flag and bump counter to re-run effect
     setLocationPermissionDenied(false);
     setCoordsRetryCount((c) => c + 1);
   }, []);
 
-  // ---------- Register Modal ----------
+  // ---------- Register ----------
   function handleRegister({ name, avatar, email, password }, handleReset) {
     signup({ name, avatar, email, password })
       .then(() => signin({ email, password }))
       .then((res) => {
         localStorage.setItem("jwt", res.token);
+        return checkToken(res.token);
+      })
+      .then((user) => {
+        setCurrentUser(user);
         setIsLoggedIn(true);
         handleReset?.();
         closeModal();
@@ -198,11 +210,15 @@ function App() {
       .catch((err) => console.error("Registration failed:", err));
   }
 
-  // ---------- Login Modal ----------
+  // ---------- Login ----------
   function handleLogin({ email, password }, handleReset) {
     signin({ email, password })
       .then((res) => {
         localStorage.setItem("jwt", res.token);
+        return checkToken(res.token);
+      })
+      .then((user) => {
+        setCurrentUser(user);
         setIsLoggedIn(true);
         handleReset?.();
         closeModal();
@@ -210,86 +226,122 @@ function App() {
       .catch((err) => console.error("Login failed:", err));
   }
 
+  // ---------- Update User ----------
+  function handleUpdateUser({ name, avatar }, handleReset) {
+    updateUser({ name, avatar })
+      .then((updatedUser) => {
+        setCurrentUser(updatedUser);
+        handleReset?.();
+        closeModal();
+      })
+      .catch((err) => console.error("Update profile failed:", err));
+  }
+
   // ---------- Render ----------
   return (
     <CurrentTemperatureUnitContext.Provider
       value={{ currentTemperatureUnit, handleToggleSwitchChange }}
     >
-      <div className="page">
-        <div className="page__wrapper">
-          {/* Tiny banner when permission was denied */}
-          {locationPermissionDenied && (
-            <div className="location-warning" role="status" aria-live="polite">
-              We couldn't access your precise location (permission denied).
-              Using an approximate location for weather.
-              <button
-                className="location-warning__retry"
-                onClick={handleRetryLocation}
+      <CurrentUserContext.Provider value={currentUser}>
+        <div className="page">
+          <div className="page__wrapper">
+            {locationPermissionDenied && (
+              <div
+                className="location-warning"
+                role="status"
+                aria-live="polite"
               >
-                Retry
-              </button>
-            </div>
-          )}
+                We couldn't access your precise location (permission denied).
+                Using an approximate location for weather.
+                <button
+                  className="location-warning__retry"
+                  onClick={handleRetryLocation}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
 
-          <Header
-            addClothesButtonClick={addClothesButtonClick}
-            weatherData={weatherData}
-          />
-
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Main
-                  weatherData={weatherData}
-                  clothingItems={clothingItems}
-                  handleCardClick={handleCardClick}
-                />
-              }
+            <Header
+              addClothesButtonClick={addClothesButtonClick}
+              weatherData={weatherData}
+              isLoggedIn={isLoggedIn}
+              currentUser={currentUser}
+              onSignUp={() => setActiveModal("register")}
+              onLogIn={() => setActiveModal("login")}
             />
 
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute isLoggedIn={isLoggedIn}>
-                  <Profile
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Main
+                    weatherData={weatherData}
                     clothingItems={clothingItems}
-                    addClothesButtonClick={addClothesButtonClick}
                     handleCardClick={handleCardClick}
                   />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+                }
+              />
 
-          <Footer />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <Profile
+                      clothingItems={clothingItems}
+                      addClothesButtonClick={addClothesButtonClick}
+                      handleCardClick={handleCardClick}
+                      onEditProfile={handleEditProfileClick}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+
+            <Footer />
+          </div>
+
+          <AddItemModal
+            activeModal={activeModal}
+            onClose={closeModal}
+            onAddItem={handleAddItem}
+          />
+
+          <ItemModal
+            activeModal={activeModal}
+            card={selectedCard}
+            onClose={closeModal}
+            onOpenConfirm={() => openConfirmModal(selectedCard)}
+          />
+
+          <ConfirmDeleteModal
+            activeModal={activeModal}
+            onClose={closeModal}
+            onConfirm={handleDeleteItem}
+          />
+
+          <RegisterModal
+            activeModal={activeModal}
+            onClose={closeModal}
+            onRegister={handleRegister}
+            onSwitchToLogin={() => setActiveModal("login")}
+          />
+
+          <LoginModal
+            activeModal={activeModal}
+            onClose={closeModal}
+            onLogin={handleLogin}
+            onSwitchToRegister={() => setActiveModal("register")}
+          />
+
+          <EditProfileModal
+            activeModal={activeModal}
+            onClose={closeModal}
+            onUpdateUser={handleUpdateUser}
+            currentUser={currentUser}
+          />
         </div>
-
-        <AddItemModal
-          activeModal={activeModal}
-          onClose={closeModal}
-          onAddItem={handleAddItem}
-        />
-
-        <ItemModal
-          activeModal={activeModal}
-          card={selectedCard}
-          onClose={closeModal}
-          onOpenConfirm={() => openConfirmModal(selectedCard)}
-        />
-
-        <ConfirmDeleteModal
-          activeModal={activeModal}
-          onClose={closeModal}
-          onConfirm={handleDeleteItem}
-        />
-
-        <RegisterModal
-          activeModal={activeModal}
-          onClose={closeModal}
-          onRegister={handleRegister}
-        />
-      </div>
+      </CurrentUserContext.Provider>
     </CurrentTemperatureUnitContext.Provider>
   );
 }

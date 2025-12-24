@@ -24,6 +24,7 @@
   justify-content: space-between;
   padding: 0 8px;
   transition: border-color 150ms ease-in-out;
+  z-index: 0;
   
 }
 

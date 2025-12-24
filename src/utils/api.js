@@ -6,16 +6,39 @@ export const checkResponse = (res) => {
 
 export const getItems = () => fetch(`${BASE_URL}/items`).then(checkResponse);
 
-export const addItem = ({ name, imageUrl, weather }) => {
+export const addItem = (item) => {
+  const token = localStorage.getItem("jwt");
+
   return fetch(`${BASE_URL}/items`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, imageUrl, weather }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(item),
   }).then(checkResponse);
 };
 
 export const deleteItem = (id) => {
+  const token = localStorage.getItem("jwt");
+
   return fetch(`${BASE_URL}/items/${id}`, {
     method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then(checkResponse);
+};
+
+export const updateUser = ({ name, avatar }) => {
+  const token = localStorage.getItem("jwt");
+
+  return fetch(`${BASE_URL}/users/me`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ name, avatar }),
   }).then(checkResponse);
 };

@@ -1,6 +1,19 @@
+import { useContext, useMemo } from "react";
 import ItemCard from "../ItemCard/ItemCard";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 
 export default function ClothesSection({ clothingItems, onAddItem, onCardClick }) {
+  const currentUser = useContext(CurrentUserContext);
+
+  const userItems = useMemo(() => {
+    const userId = currentUser?._id;
+    if (!userId) return [];
+    return clothingItems.filter((item) => {
+      const ownerId = item.owner?._id ?? item.owner;
+      return ownerId === userId;
+    });
+  }, [clothingItems, currentUser]);
+
   return (
     <section className="profile__clothes">
       <div className="profile__title-row">
@@ -11,7 +24,7 @@ export default function ClothesSection({ clothingItems, onAddItem, onCardClick }
       </div>
 
       <ul className="profile__cards">
-        {clothingItems.map((item) => (
+        {userItems.map((item) => (
           <ItemCard
             key={item._id || item.id || item.name}
             item={item}
