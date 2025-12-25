@@ -20,6 +20,13 @@ This project is part of the TripleTen Software Engineering Program and demonstra
 
 ---
 
+## Backend Repository
+
+Backend code for this project can be found here:
+[se_project_express](https://github.com/AlexXavierRuiz571/se_project_express)
+
+---
+
 ## Project Pitch Video
 
 Check out [this video](https://drive.google.com/file/d/1N8HKT-mGvB2vnwwhlvfQeDZqSe9rd9Lp/view?usp=sharing), where I describe my

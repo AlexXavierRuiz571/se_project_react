@@ -2,7 +2,12 @@ import { useContext, useMemo } from "react";
 import ItemCard from "../ItemCard/ItemCard";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 
-export default function ClothesSection({ clothingItems, onAddItem, onCardClick }) {
+export default function ClothesSection({
+  clothingItems,
+  addClothesButtonClick,
+  handleCardClick,
+  onCardLike
+}) {
   const currentUser = useContext(CurrentUserContext);
 
   const userItems = useMemo(() => {
@@ -17,8 +22,12 @@ export default function ClothesSection({ clothingItems, onAddItem, onCardClick }
   return (
     <section className="profile__clothes">
       <div className="profile__title-row">
-        <h2 className="profile__title">Your items</h2>
-        <button type="button" className="profile__add-button" onClick={onAddItem}>
+        <h2 className="profile__title">Your items</h2> 
+        <button
+          type="button"
+          className="profile__add-button"
+          onClick={addClothesButtonClick}
+        >
           + Add new
         </button>
       </div>
@@ -28,7 +37,8 @@ export default function ClothesSection({ clothingItems, onAddItem, onCardClick }
           <ItemCard
             key={item._id || item.id || item.name}
             item={item}
-            onCardClick={onCardClick}
+            onCardClick={handleCardClick}
+            onCardLike={onCardLike}
           />
         ))}
       </ul>

@@ -12,6 +12,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
+  filter: drop-shadow(1px 1px 2px #000);
 }
 
 .navigation__menu {
@@ -33,13 +34,26 @@
 }
 
 .header__add-clothes-button {
-  margin: 0 20px 0;
-  font-family: "CabinetGrotesk", sans-serif;
+  margin: 0;
+  padding: 8px 20px;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;
   border: none;
   background: transparent;
+  cursor: pointer;
+}
+
+.header__auth-button {
+  margin-left: 20px;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+  border: none;
+  background: none;
+  padding: 0;
   cursor: pointer;
 }
 

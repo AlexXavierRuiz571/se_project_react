@@ -54,10 +54,10 @@ function Header({
         </>
       ) : (
         <div className="header__auth">
-          <button className="header__auth-btn" onClick={onSignUp}>
+          <button className="header__auth-button" onClick={onSignUp}>
             Sign Up
           </button>
-          <button className="header__auth-btn" onClick={onLogIn}>
+          <button className="header__auth-button" onClick={onLogIn}>
             Log In
           </button>
         </div>

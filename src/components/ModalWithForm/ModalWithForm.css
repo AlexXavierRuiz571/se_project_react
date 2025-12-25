@@ -149,6 +149,33 @@
   cursor: not-allowed;
 }
 
+.modal__actions {
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.modal__alt-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: "CabinetGrotesk-Bold", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #000000;
+  opacity: 50%;
+}
+
+.modal__alt-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
 .modal__error {
   display: block;
   margin-top: 4px;

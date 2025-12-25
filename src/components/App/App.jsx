@@ -4,6 +4,8 @@ import {
   addItem as apiAddItem,
   deleteItem as apiDeleteItem,
   updateUser,
+  addCardLike,
+  removeCardLike,
 } from "../../utils/api";
 import { signup, signin, checkToken } from "../../utils/auth";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
@@ -20,7 +22,7 @@ import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
 import Profile from "../Profile/Profile";
 import CurrentTemperatureUnitContext from "../../contexts/CurrentTemperatureUnitContext";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { getWeather, filterWeatherData } from "../../utils/weatherApi";
 import { coordinates, APIKey, getBestCoordinates } from "../../utils/constants";
 
@@ -49,6 +51,8 @@ function App() {
   // auth / user
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+
+  const navigate = useNavigate();
 
   // ---------- Helpers ----------
   const normalizeItem = (item) => ({
@@ -115,6 +119,27 @@ function App() {
         closeModal();
       })
       .catch((err) => console.error("DELETE /items failed:", err));
+  }
+
+  // ---------- Like / Unlike Item ----------
+  function handleCardLike({ id, isLiked }) {
+    const token = localStorage.getItem("jwt");
+    if (!token) return;
+
+    const likeRequest = !isLiked
+      ? addCardLike(id, token)
+      : removeCardLike(id, token);
+
+    likeRequest
+      .then((updatedCard) => {
+        const normalized = normalizeItem(updatedCard);
+        setClothingItems((prev) =>
+          prev.map((item) =>
+            item._id === id || item.id === id ? normalized : item
+          )
+        );
+      })
+      .catch((err) => console.error("Toggle like failed:", err));
   }
 
   // ---------- Acquire Coordinates (cache -> geolocation -> IP -> default) ----------
@@ -226,6 +251,15 @@ function App() {
       .catch((err) => console.error("Login failed:", err));
   }
 
+ // ---------- Sign Out ----------
+ function handleSignOut() {
+    localStorage.removeItem("jwt");
+    setIsLoggedIn(false);
+    setCurrentUser(null);
+    setActiveModal("");
+    navigate("/");
+  }
+
   // ---------- Update User ----------
   function handleUpdateUser({ name, avatar }, handleReset) {
     updateUser({ name, avatar })
@@ -279,6 +313,7 @@ function App() {
                     weatherData={weatherData}
                     clothingItems={clothingItems}
                     handleCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
                   />
                 }
               />
@@ -291,7 +326,9 @@ function App() {
                       clothingItems={clothingItems}
                       addClothesButtonClick={addClothesButtonClick}
                       handleCardClick={handleCardClick}
+                      onCardLike={handleCardLike}
                       onEditProfile={handleEditProfileClick}
+                      onSignOut={handleSignOut}
                     />
                   </ProtectedRoute>
                 }

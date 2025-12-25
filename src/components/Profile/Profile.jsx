@@ -2,20 +2,29 @@ import "./Profile.css";
 import SideBar from "./Sidebar";
 import ClothesSection from "./ClothesSection";
 
-export default function Profile({
+function Profile({
   clothingItems,
   addClothesButtonClick,
   handleCardClick,
+  onCardLike,
   onEditProfile,
+  onSignOut,
 }) {
   return (
-    <main className="profile">
-      <SideBar />
+    <section className="profile">
+      <SideBar
+        onEditProfile={onEditProfile}
+        onSignOut={onSignOut}
+      />
+
       <ClothesSection
         clothingItems={clothingItems}
-        onAddItem={addClothesButtonClick}
-        onCardClick={handleCardClick}
+        addClothesButtonClick={addClothesButtonClick}
+        handleCardClick={handleCardClick}
+        onCardLike={onCardLike}
       />
-    </main>
+    </section>
   );
 }
+
+export default Profile;

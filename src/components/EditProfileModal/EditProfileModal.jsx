@@ -50,7 +50,7 @@ function EditProfileModal({
     <ModalWithForm
       name="edit-profile"
       titleText="Change profile data"
-      buttonText="Save"
+      buttonText="Save Changes"
       activeModal={activeModal}
       onClose={handleModalClose}
       onSubmit={handleSubmit}
