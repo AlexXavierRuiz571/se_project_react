@@ -3,15 +3,21 @@ import logo from "../../assets/wtwr-logo.svg";
 import avatarFallback from "../../assets/avatar.png";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 
 function Header({
   addClothesButtonClick,
   weatherData,
   isLoggedIn,
-  currentUser,
   onSignUp,
   onLogIn,
 }) {
+  const currentUser = useContext(CurrentUserContext);
+
+  const displayName = currentUser?.name || "User";
+  const displayAvatar = currentUser?.avatar || avatarFallback;
+
   const currentDate = new Date().toLocaleString("default", {
     month: "long",
     day: "numeric",
@@ -34,21 +40,19 @@ function Header({
       {isLoggedIn ? (
         <>
           <button
-            onClick={addClothesButtonClick}
             type="button"
             className="header__add-clothes-button"
+            onClick={addClothesButtonClick}
           >
             + Add Clothes
           </button>
 
           <Link to="/profile" className="header__user">
-            <span className="header__username">
-              {currentUser?.name || "User"}
-            </span>
+            <span className="header__username">{displayName}</span>
             <img
               className="header__avatar"
-              src={currentUser?.avatar || avatarFallback}
-              alt="User avatar"
+              src={displayAvatar}
+              alt={`${displayName} avatar`}
             />
           </Link>
         </>

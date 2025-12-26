@@ -245,6 +245,7 @@ function App() {
       .then((user) => {
         setCurrentUser(user);
         setIsLoggedIn(true);
+        navigate("/");
         handleReset?.();
         closeModal();
       })
@@ -300,7 +301,6 @@ function App() {
               addClothesButtonClick={addClothesButtonClick}
               weatherData={weatherData}
               isLoggedIn={isLoggedIn}
-              currentUser={currentUser}
               onSignUp={() => setActiveModal("register")}
               onLogIn={() => setActiveModal("login")}
             />
